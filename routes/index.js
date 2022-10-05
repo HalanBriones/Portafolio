@@ -4,9 +4,9 @@ const router = Router();
 
 
 router.post('/email', (req,res) => {
-    console.log(req.body)
+    console.log('email');
     res.send(req.body);
-
+    
 })
 
 
