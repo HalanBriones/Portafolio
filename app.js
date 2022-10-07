@@ -3,37 +3,48 @@ const app = express();
 const path = require('path')
 const bodyParser = require('body-parser');
 const nodeMailer = require('nodemailer');
+const Swal = require('sweetalert2');
+
+
+
 
 //app.use(require('./routes/index'));
-
-app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname,'/html/index.html')));
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+
+app.use(express.static(path.join(__dirname,'/public')));
+app.use(express.static(path.join(__dirname,'/html')));
+
+app.set('view engine', 'html');
+app.engine('html', require('ejs').renderFile);
 
 app.post('/email', function (req, res) {
-let transporter = nodeMailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: 'halanbrionesmerino@gmail.com',
-        pass: 'rmedbksgcdvunggr'
-    }
-});
+    let transporter = nodeMailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'halanbrionesmerino@gmail.com',
+            pass: 'rmedbksgcdvunggr'
+        }
+    });
 
-let mailOptions = {
-    from: 'halanbrionesmerino@gmail.com', // sender address desde donde se enviara el email
-    to: 'halanbm98@gmail.com', // list of receivers la persona que quiere que lo contactes
-    subject: req.body.subject, // Subject line objetivo de la solicitud de contacto
-    text: req.body.message, // plain text body Mensage 
-    html: '<b>' + req.body.name + ' esta solicitando que lo contactes a su correo que es '+ req.body.email +' Mensaje adjuntado dice: '+ req.body.message +'</b>' // html body
-};
-transporter.sendMail(mailOptions, (error, info) => {
-if (error) {
-    return console.log(error);
-}else{
-    window.alert('Sent Succesfull')
-    res.sendFile(path.join(__dirname,"/html/index.html"));
-}
-});
+    let mailOptions = {
+        from: 'halanbrionesmerino@gmail.com', // sender address desde donde se enviara el email
+        to: 'halanbm98@gmail.com', // list of receivers la persona que quiere que lo contactes
+        subject: req.body.subject, // Subject line objetivo de la solicitud de contacto
+        text: req.body.message, // plain text body Mensage 
+        html: '<b>' + req.body.name + ' esta solicitando que lo contactes a su correo que es '+ req.body.email +' Mensaje adjuntado dice: '+ req.body.message +'</b>' // html body
+    };
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            return console.log(error);
+        }else{
+            res.status(201).render(path.join(__dirname, "/html/index.html"), { isAdded : true } );
+        }
+    });
+    // res.sendFile(path.join(__dirname, "/html/index.html"))
+    
 });
 
 // main route

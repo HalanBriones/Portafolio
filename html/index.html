@@ -40,7 +40,7 @@
     <span class="ti-arrow-up"></span>
   </div>
   
-  <div class="vg-page page-home" id="home" style="background-image: url(../assets/img/bg_image_1.jpg)">
+  <div class="vg-page page-home" id="home" style="background-image: url('assets/img/bg_image_1.jpg')">./assets/img/bg_image_1.jpg
     <!-- Navbar -->
     <div class="navbar navbar-expand-lg navbar-dark sticky" data-offset="500">
       <div class="container">
@@ -367,7 +367,7 @@
       <h1 class="text-center fw-normal wow fadeInUp">Get in touch</h1>
       <div class="row d-flex justify-content-center">
         <div class="col-lg-5">
-          <form action="/email" method="post" class="vg-contact-form">
+          <form action="/email" id="form" method="post" class="vg-contact-form">
             <div class="form-row">
               <div class="col-12 mt-3 wow fadeInUp">
                 <input class="form-control" type="text" name="name" placeholder="Your Name">
@@ -381,7 +381,7 @@
               <div class="col-12 mt-3 wow fadeInUp">
                 <textarea class="form-control" name="message" rows="6" placeholder="Enter message here.."></textarea>
               </div>
-              <button type="submit" class="btn btn-theme mt-3 wow fadeInUp ml-1">Send Message</button>
+              <input type="submit" class="btn btn-theme mt-3 wow fadeInUp ml-1" value="Send Message"></input>
             </div>
           </form>
         </div>
@@ -393,14 +393,22 @@
   <div class="vg-footer">
     <h1 class="text-center">Contact information</h1>
     <div class="container">
-      <div class="row ">
-        <div class="d-flex justify-content-left">
+      <div class="row">
+        <div class="d-flex justify-content-between">
           <div class="float-center">
             <hr class="divider">
             <ul class="list-unstyled">
               <li><img src="../assets/img/gmail.png" width="30" height="40" > halanbm98@gmail.com</li>
               <li><img src="../assets/img/irlanda.png" width="30" height="40" > +353 (083) 138 0546 </li>
               <li><img src="../assets/img/chile.png" width="30" height="40" > +56 (9) 7546 7938  </li>
+            </ul>
+          </div>
+          <div class="">
+            <hr class="divider">
+            <ul class="list-unstyled">
+              <li><a href="https://github.com/HalanBriones"><img src="../assets/img/github-logo.png" width="30" height="40" > My GitHub </a></li>
+              <br>
+              <li><a href="https://www.linkedin.com/in/halanbriones"><img src="../assets/img/linkedin.png" width="30" height="40" > My Linkedin  </a></li>
             </ul>
           </div>
         </div>
@@ -435,7 +443,19 @@
     
   <script src="../assets/js/topbar-virtual.js"></script>
 
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIA_zqjFMsJM_sxP9-6Pde5vVCTyJmUHM&callback=initMap"></script>
-  
+
+  <% if (isAdded) { %>
+    <script>
+     Swal.fire(
+        'Form submitted successfully',
+        'Thank you, I will be in contact soon',
+        'success'
+    )
+   </script>
+  <% } %>
+
 </body>
 </html>
