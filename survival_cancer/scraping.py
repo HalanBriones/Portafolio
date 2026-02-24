@@ -16,8 +16,9 @@ final_columns = [
     'age_group',
     'Sex',
     'cancer_type',
+    'UOM',
+    'Characteristics',
     'survival_rate',
-    #'Characteristics',
     'STATUS',
     ]
 
@@ -35,15 +36,34 @@ pd.set_option('display.max_columns', None)
 pd.set_option('display.width',1000)
 pd.set_option("display.max_colwidth", None)
 
-print(final_df.head(10)) #First x values
+#print(final_df.head(10)) #First x values
 #print(df.tail(2)) #Last x values
 
 #**************INSIGHTS****************#
 
 #Insights to dataframe to later create graphics
+#Cancer-Type Survival in 5 year net survival
 
+#Filter and leave only where Charasteristics = 5 year net survival and also only keep UOM = percenteg
 
-#Cancer-Type Survival
+filtered_df= final_df[(final_df['Characteristics']== '5-year net survival') & (final_df['UOM']== 'Percentage') ]
+
+#print(filtered_df.head(5))
+
+cancer_survival_df = filtered_df.groupby(['cancer_type'])['survival_rate'].mean().reset_index()
+cancer_survival_df.sort_values(by='survival_rate', ascending=False)
+
+#print(cancer_survival_df.head(10))
 #Sex based Differences
+
+sex_differences_df = filtered_df.groupby(['cancer_type','Sex'])['survival_rate'].mean().reset_index()
+sex_differences_df.sort_values(by='survival_rate', ascending=False)
+#print(sex_differences_df.head(10))
+
 #Age Group
+#We need to clean the column Age Group in order to analize the data
+
 #Regional Diferences
+region_dif_df = filtered_df.groupby(['Region','cancer_type'])['survival_rate'].mean().reset_index()
+region_dif_df.sort_values(by='survival_rate',ascending=False)
+print(region_dif_df.head(30))
