@@ -42,7 +42,7 @@ pd.set_option("display.max_colwidth", None)
 #**************INSIGHTS****************#
 
 #Insights to dataframe to later create graphics
-#Cancer-Type Survival in 5 year net survival
+
 
 #Filter and leave only where Charasteristics = 5 year net survival and also only keep UOM = percenteg
 
@@ -50,6 +50,7 @@ filtered_df= final_df[(final_df['Characteristics']== '5-year net survival') & (f
 
 #print(filtered_df.head(5))
 
+#Cancer-Type Survival in 5 year net survival
 cancer_survival_df = filtered_df.groupby(['cancer_type'])['survival_rate'].mean().reset_index()
 cancer_survival_df.sort_values(by='survival_rate', ascending=False)
 
@@ -61,9 +62,21 @@ sex_differences_df.sort_values(by='survival_rate', ascending=False)
 #print(sex_differences_df.head(10))
 
 #Age Group
-#We need to clean the column Age Group in order to analize the data
+#Clean Age Group data with regular expresions -> (\d+)\s+to\s+(\d+)
 
+df_age = filtered_df[filtered_df['age_group'].str.contains('Total')==False].copy()
+
+df_age[['age_min','age_max']] = df_age['age_group'].str.extract(r'(\d+)\s+to\s+(\d+)') #r means raw strign 
+
+df_age['age_min'] = df_age['age_min'].astype(int)
+df_age['age_max'] = df_age['age_max'].astype(int)
+df_age['age_mid'] = (df_age['age_min'] + df_age['age_max'])/2 #mid point of ages
+
+age_group_df = df_age.groupby(['cancer_type','age_mid'])['survival_rate'].mean().reset_index()
+age_group_df.sort_values(by='survival_rate',ascending=False)
+
+print(age_group_df.head(10))
 #Regional Diferences
 region_dif_df = filtered_df.groupby(['Region','cancer_type'])['survival_rate'].mean().reset_index()
 region_dif_df.sort_values(by='survival_rate',ascending=False)
-print(region_dif_df.head(30))
+#print(region_dif_df.head(30))
