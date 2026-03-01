@@ -1,4 +1,5 @@
 import pandas as pd
+import plotly.express as px
 
 path = "dataset/13100159.csv"
 
@@ -46,20 +47,40 @@ pd.set_option("display.max_colwidth", None)
 
 #Filter and leave only where Charasteristics = 5 year net survival and also only keep UOM = percenteg
 
-filtered_df= final_df[(final_df['Characteristics']== '5-year net survival') & (final_df['UOM']== 'Percentage') ]
+filtered_df= final_df[(final_df['Characteristics']== '5-year net survival') & (final_df['UOM']== 'Percentage')].copy()
 
+filtered_df['cancer_type'] = filtered_df['cancer_type'].str.replace(r'\[.*\]','',regex=True)
 #print(filtered_df.head(5))
 
 #Cancer-Type Survival in 5 year net survival
-cancer_survival_df = filtered_df.groupby(['cancer_type'])['survival_rate'].mean().reset_index()
-cancer_survival_df.sort_values(by='survival_rate', ascending=False)
 
-#print(cancer_survival_df.head(10))
+cancer_survival_df = filtered_df.groupby(['cancer_type'])['survival_rate'].mean().reset_index()
+cancer_survival_df = cancer_survival_df.sort_values('survival_rate',ascending=False) #Descending order
+cancer_survival_df['rank'] = cancer_survival_df['survival_rate'].rank(ascending=False,method='dense') #create rank column
+#Limiting the dataframe to 10 types of cancer
+cancer_survival_df = cancer_survival_df.head(10)
+graph_can_surv = px.bar(
+    data_frame = cancer_survival_df,
+    x = 'survival_rate',
+    y = 'cancer_type',
+    orientation = 'h',
+    color = 'rank',
+    text = 'survival_rate', #add label on top of the bars
+    title = 'Average Survival rate by Cancer Type' #head of the graphic
+)
+
+#Showing yaxe ascending
+#graph_can_surv.update_yaxes(categoryorder='total ascending')
+
+graph_can_surv.show()
+
+#print('Cancer Type Survival rate mean \n',cancer_survival_df.head(20))
+
 #Sex based Differences
 
 sex_differences_df = filtered_df.groupby(['cancer_type','Sex'])['survival_rate'].mean().reset_index()
 sex_differences_df.sort_values(by='survival_rate', ascending=False)
-#print(sex_differences_df.head(10))
+#print('Sex based differences survival rate mean \n',sex_differences_df.head(5))
 
 #Age Group
 #Clean Age Group data with regular expresions -> (\d+)\s+to\s+(\d+)
@@ -75,8 +96,8 @@ df_age['age_mid'] = (df_age['age_min'] + df_age['age_max'])/2 #mid point of ages
 age_group_df = df_age.groupby(['cancer_type','age_mid'])['survival_rate'].mean().reset_index()
 age_group_df.sort_values(by='survival_rate',ascending=False)
 
-print(age_group_df.head(10))
+#print("Age Group Survival Rate mean \n", age_group_df.head(5))
 #Regional Diferences
 region_dif_df = filtered_df.groupby(['Region','cancer_type'])['survival_rate'].mean().reset_index()
 region_dif_df.sort_values(by='survival_rate',ascending=False)
-#print(region_dif_df.head(30))
+#print('Region differences survival rate \n',region_dif_df.head(5))
