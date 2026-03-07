@@ -25,21 +25,14 @@ final_columns = [
 
 #We use .copy() to make sure the data from the original dataframe is not afected
 final_df = df[final_columns].copy() 
-
 #Transforming the values of survival_rate to numeric
 final_df['survival_rate'] = pd.to_numeric(final_df['survival_rate'],errors='coerce')
-
 #Values in column STATUS are E: estimate, F: unreliable and NaN for Normal - change value from 'NaN' values to 'Normal'
 final_df['STATUS']= final_df['STATUS'].fillna('Normal')
-
 #settings for better display
 pd.set_option('display.max_columns', None)
 pd.set_option('display.width',1000)
 pd.set_option("display.max_colwidth", None)
-
-#print(final_df.head(10)) #First x values
-#print(df.tail(2)) #Last x values
-
 #**************INSIGHTS****************#
 #Insights to dataframe to later create graphics
 #Filter and leave only where Charasteristics = 5 year net survival and also only keep UOM = percenteg
@@ -66,7 +59,7 @@ graph_can_surv = px.bar(
     }
 )
 #Showing yaxe ascending
-graph_can_surv.show()
+#graph_can_surv.show()
 #Sex based Differences per Type of cancer
 filtered_df = filtered_df[filtered_df['Sex'] != 'Both sexes'] #Delete Sex=both sexes
 sex_differences_df = filtered_df.groupby(['cancer_type','Sex'])['survival_rate'].mean().reset_index()
@@ -118,7 +111,6 @@ df_age['age_mid'] = (df_age['age_min'] + df_age['age_max'])/2 #mid point of ages
 age_group_df = df_age.groupby(['cancer_type','age_mid'])['survival_rate'].mean().reset_index()
 age_group_df = age_group_df.sort_values(by='age_mid',ascending=True)
 age_group_df = age_group_df.head(40)#work with only 40 examples
-
 graph_age_surv = px.line(
     data_frame=age_group_df,
     x= 'age_mid',
@@ -134,8 +126,58 @@ graph_age_surv = px.line(
     }
 )
 #graph_age_surv.show()
-
 #Regional Diferences
 region_dif_df = filtered_df.groupby(['Region','cancer_type'])['survival_rate'].mean().reset_index()
-region_dif_df.sort_values(by='survival_rate',ascending=False)
-#print('Region differences survival rate \n',region_dif_df.head(5))
+region_dif_df = region_dif_df.sort_values(by='survival_rate',ascending=True)
+region_dif_df = region_dif_df.pivot(
+    index='cancer_type',
+    columns='Region',
+    values='survival_rate'
+)
+region_dif_df=region_dif_df.reset_index()
+graph_reg_surv = px.bar(
+    data_frame=region_dif_df,
+    x='cancer_type',
+    y=['Canada','Canada (excluding Quebec)'],  
+    barmode='group',
+    orientation='v',
+    title='Survival Rates per Region by Type of Cancer',
+    labels={
+        'cancer_type':'Cancer Type',
+        'value':'Survival Rate (%)'
+    }
+)
+#graph_reg_surv.show()
+#Analysis overtime
+df_year = filtered_df.groupby(['cancer_type','Year'])['survival_rate'].mean().reset_index()
+df_year = df_year.sort_values(by='survival_rate',ascending=False)
+df_year[['start_year','end_year']] = df_year['Year'].str.split('/',expand=True).copy()
+df_year['start_year'] = df_year['start_year'].astype(int)
+df_year['end_year'] = df_year['end_year'].astype(int)
+df_year['year_mid'] = (df_year['start_year']+df_year['end_year'])/2 
+df_year = df_year.drop(columns='Year')
+df_year['survival_change']= df_year.groupby('cancer_type')['survival_rate'].diff()
+df_year['survival_change'] = df_year['survival_change'].fillna(0)
+#df_year=df_year.head(20)
+#Filter Top 5 type with survival change due to many years per cancer type
+top_cancer_changes = df_year.groupby('cancer_type')['survival_change'].mean().nlargest(5).index
+df_year_top = df_year[df_year['cancer_type'].isin(top_cancer_changes)]
+print(df_year_top['cancer_type'].unique())
+
+
+graph_year_surv = px.line(
+    data_frame = df_year,
+    x= 'year_mid',
+    y='survival_rate',
+    color='cancer_type',
+    title ='5 year Survival rate(%) Over Time by Cancer Type',
+    labels = {
+        'year_mid': 'Year Mid Point',
+        'survival_rate':'Survival Rate (%)',
+        'cancer_type':'Cancer Type'
+    }
+)
+
+# graph_year_surv.update_traces(mode='lines+markers')#ad the dots in the lines
+# graph_year_surv.show()
+
