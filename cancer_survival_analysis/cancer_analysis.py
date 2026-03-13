@@ -113,7 +113,7 @@ graph_can_surv = px.bar(
     orientation='h',
     color='rank',
     text='survival_rate',
-    title='Average Survival Rate by Cancer Type',
+    title='Top 10 Cancers by Average 5-Year Survival Rate',
     labels = {
         'survival_rate':'Survival Rate (%)',
         'cancer_type':'Cancer Type',
@@ -129,7 +129,7 @@ graph_sex_surv_a = px.bar(
     y = 'cancer_type',
     barmode='group',
     orientation = 'h',
-    title = 'Sex  Survival rate Difference by Cancer Type', #head of the graphic
+    title = 'Survival Rate Differences Between Male and Female Patients', #head of the graphic
 )
 graph_sex_surv_a.update_layout(#Change name of axis title
     xaxis_title = 'Survival Rate (%)',
@@ -142,7 +142,7 @@ graph_sex_surv_b = px.bar(
     x = 'differences',
     y = 'cancer_type',
     orientation = 'h',
-    title = 'Difference Survival rate Female vs Male by Cancer Type', #head of the graphic
+    title = 'Difference Between Female and Male Survival Rates', #head of the graphic
     labels = {
         'differences':'Survival Rate Difference (%)',
         'cancer_type':'Cancer Type'
@@ -157,7 +157,7 @@ graph_age_surv = px.line(
     orientation = 'v',
     color='cancer_type',
     markers=True,
-    title = 'Age Mid Point Survival Rate by Cancer Type',
+    title = 'Relationship Between Age and 5-Year Survival Rates',
     labels={
         'age_mid' : 'Age Mid Point',
         'survival_rate' : 'Survival Rate (%)',
@@ -172,7 +172,7 @@ graph_reg_surv = px.bar(
     y=['Canada','Canada (excluding Quebec)'],  
     barmode='group',
     orientation='v',
-    title='Survival Rates per Region by Type of Cancer',
+    title='Regional Differences in Cancer Survival Rates',
     labels={
         'cancer_type':'Cancer Type',
         'value':'Survival Rate (%)'
@@ -185,7 +185,7 @@ graph_year_surv = px.line( #Survival rate over the years
     x= 'year_mid',
     y='survival_rate',
     color='cancer_type',
-    title ='5 year Survival rate(%) Over Time by Cancer Type',
+    title ='Cancer Survival Trends Over Time',
     labels = {
         'year_mid': 'Year Mid Point',
         'survival_rate':'Survival Rate (%)',
@@ -200,7 +200,7 @@ graph_year_surv_change = px.line( #Survival change over the years
     x= 'year_mid',
     y='survival_change',
     color='cancer_type',
-    title ='Change in 5 year Cancer Survival rate(%) Over Time',
+    title ='Changes in Survival Rates Over Time',
     labels = {
         'year_mid': 'Year Mid Point',
         'survival_change':'Survival Change',
