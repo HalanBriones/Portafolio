@@ -3,7 +3,7 @@ import plotly.express as px
 
 # DATA LOADING
 # ==========================
-path = "dataset/13100159.csv"
+path = "dataset/rawdataset/13100159.csv"
 
 df = pd.read_csv(path,skiprows=1,sep=',',names=('REF_DATE','GEO','DGUID','Age group','Sex','Primary types of cancer (ICD-O-3)','Characteristics','UOM','UOM_ID','SCALAR_FACTOR','SCALAR_ID','VECTOR','COORDINATE','VALUE','STATUS','SYMBOL','TERMINATED','DECIMALS'))
 # ==========================
@@ -120,7 +120,7 @@ graph_can_surv = px.bar(
         'rank':'Ranking'
     }
 )
-graph_can_surv.show()
+#graph_can_surv.show()
 # SEX DIFFERENCES
 #Graphic females vs males by cancer type 
 graph_sex_surv_a = px.bar(
@@ -135,7 +135,7 @@ graph_sex_surv_a.update_layout(#Change name of axis title
     xaxis_title = 'Survival Rate (%)',
     yaxis_title = 'Cancer Type'
 )
-graph_sex_surv_a.show()
+#graph_sex_surv_a.show()
 #Graphic difference survival rate female vs male
 graph_sex_surv_b = px.bar(
     data_frame = sex_differences_df.head(10),
@@ -148,7 +148,7 @@ graph_sex_surv_b = px.bar(
         'cancer_type':'Cancer Type'
     }
 )
-graph_sex_surv_b.show()
+#graph_sex_surv_b.show()
 # AGE ANALYSIS
 graph_age_surv = px.line(
     data_frame=age_group_df.head(40),
@@ -164,7 +164,7 @@ graph_age_surv = px.line(
         'cancer_type' : 'Cancer Type'
     }
 )
-graph_age_surv.show()
+#graph_age_surv.show()
 #REGIONAL DIFFERENCES
 graph_reg_surv = px.bar(
     data_frame=region_dif_df,
@@ -178,7 +178,7 @@ graph_reg_surv = px.bar(
         'value':'Survival Rate (%)'
     }
 )
-graph_reg_surv.show()
+#graph_reg_surv.show()
 # SURVIVAL TRENDS OVER TIME
 graph_year_surv = px.line( #Survival rate over the years
     data_frame = df_year_top,
@@ -193,7 +193,7 @@ graph_year_surv = px.line( #Survival rate over the years
     }
 )
 graph_year_surv.update_traces(mode='lines+markers')#ad the dots in the lines
-graph_year_surv.show()
+#graph_year_surv.show()
 
 graph_year_surv_change = px.line( #Survival change over the years
     data_frame = df_year_top,
@@ -208,5 +208,6 @@ graph_year_surv_change = px.line( #Survival change over the years
     }
 )
 graph_year_surv_change.update_traces(mode='lines+markers')#ad the dots in the lines
-graph_year_surv_change.show()
+#graph_year_surv_change.show()
 # ==========================
+
