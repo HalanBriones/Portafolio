@@ -55,5 +55,5 @@ filtered_df = filtered_df[filtered_df['sex'] != 'Both sexes']
 filtered_df = filtered_df.groupby(['cancer_type','sex','age_min','age_max','age_mid','region','start_year','end_year','year_mid'])['survival_rate'].mean().reset_index()
 filtered_df = filtered_df.sort_values(by='survival_rate',ascending=False)
 
-filtered_df.to_csv('dataset/cancer_surv_clean.csv',sep=',', header=True, encoding='utf-8')
+filtered_df.to_csv('dataset/cancer_surv_clean.csv',sep=',', header=True, encoding='utf-8', index=False)
 
