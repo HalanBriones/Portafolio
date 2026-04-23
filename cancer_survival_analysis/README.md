@@ -46,7 +46,7 @@ It is recommended to create a virtual environment to run the code
 - Top 10 Cancers by Average 5-Year Survival Rate – Bar chart showing the cancers with highest average survival rates.
 - Sex-Based Survival Differences by Cancer Type – Grouped bar chart comparing male vs female survival rates.
 - Difference Between Female and Male Survival Rates – Bar chart highlighting cancers with largest sex-based differences.
-- Survival Rate by Age Midpoint – Line chart showing survival rate trends across age midpoints for different cancers.
+- Impact of Age on 5-Year Survival Rates – Line chart showing survival rate trends across age midpoints for the top 5 cancers with the highest average survival rates.
 - Regional Differences in Survival Rates – Bar chart comparing survival rates across regions.
 - Survival Trends Over Time – Line chart showing 5-year survival rates over multiple years for cancers with the highest changes.
 - Change in Survival Rates Over Time – Line chart highlighting year-to-year changes in survival rates.
