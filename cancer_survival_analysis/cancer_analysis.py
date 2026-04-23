@@ -71,7 +71,10 @@ df_age['age_min'] = df_age['age_min'].astype(int) #values to integer
 df_age['age_max'] = df_age['age_max'].astype(int)#values to integer
 df_age['age_mid'] = (df_age['age_min'] + df_age['age_max'])/2 #mid point of ages
 age_group_df = df_age.groupby(['cancer_type','age_mid'])['survival_rate'].mean().reset_index()
-age_group_df = age_group_df.sort_values(by='age_mid',ascending=True)
+age_group_df = age_group_df.sort_values(by='age_mid',ascending=False)
+top_cancer_surv_rate = age_group_df.groupby('cancer_type')['survival_rate'].mean().nlargest(5).index
+final_age_group_df = age_group_df[age_group_df['cancer_type'].isin(top_cancer_surv_rate)]
+final_age_group_df = final_age_group_df.sort_values(by=['cancer_type','age_mid'])
 # --------------------
 # REGIONAL DIFFERENCES
 # --------------------
@@ -151,20 +154,20 @@ graph_sex_surv_b = px.bar(
 #graph_sex_surv_b.show()
 # AGE ANALYSIS
 graph_age_surv = px.line(
-    data_frame=age_group_df.head(40),
+    data_frame=final_age_group_df,
     x= 'age_mid',
     y='survival_rate',
     orientation = 'v',
     color='cancer_type',
     markers=True,
-    title = 'Relationship Between Age and 5-Year Survival Rates',
+    title = 'Impact of Age on 5-Year Survival Rates',
     labels={
-        'age_mid' : 'Age Mid Point',
+        'age_mid' : 'Age (Mid Point)',
         'survival_rate' : 'Survival Rate (%)',
         'cancer_type' : 'Cancer Type'
     }
 )
-#graph_age_surv.show()
+graph_age_surv.show()
 #REGIONAL DIFFERENCES
 graph_reg_surv = px.bar(
     data_frame=region_dif_df,
